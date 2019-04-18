@@ -84,26 +84,33 @@ xhr.addEventListener("readystatechange", function () {
     console.log(obj.hits.hits);
     console.log(obj.hits.total.value);
 
-    $('#most_retweet').text('Nombre total de tweets : ' + obj.hits.total.value);
+    $('#most_retweet').text('Nombre total de tweets trouvés : ' + obj.hits.total.value);
+
+    var tab = [];
+    var hits = obj.hits.hits;
+
+    $(hits).each(function( index, val ) {
+      $(val).each(function(k, v) {
+        console.log(v._source.favorite_count)
+        tab.push(v._source.favorite_count);
+      });
+    });
 
     // Chart
     var ctx = document.getElementById('myChart').getContext('2d');
     var chart = new Chart(ctx, {
-        // The type of chart we want to create
         type: 'bar',
 
-        // The data for our dataset
         data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            labels: ['Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet'],
             datasets: [{
-                label: 'Tweets les plus re-tweeter et liker',
+                label: 'Tweets les plus re-tweeter et liker concernant les trottinettes électriques',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: [0, 10, 5, 2, 20, 30, 45]
+                data: tab
             }]
         },
 
-        // Configuration options go here
         options: {}
     });
   }
