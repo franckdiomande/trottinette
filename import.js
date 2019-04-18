@@ -76,7 +76,6 @@ Fs.readdir(scootDir, (err, files) => {
             }
             bulkData = bulkData + JSON.stringify(data) + '\n';
         });
-        console.log(elasticSearchIndexNames[nameIndex]);
         request.post('http://localhost:9200/_bulk', {
             headers: {
                 'content-type': 'application/x-ndjson'
