@@ -1,0 +1,13 @@
+PUT twitter 
+{
+  "mappings": {
+    "tweet": {
+      "properties": { 
+        "created_at": { 
+          "type": "date",
+          "format": "yyyy-MM-dd hh:mm:ss"
+        }
+      }
+    }
+  }
+}
