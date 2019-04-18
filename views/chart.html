@@ -1,29 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
   <title>Chart</title>
-  <link rel="stylesheet" href="">
-  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
-  <script src="script.js"></script>
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 </head>
 <style>
-  body {
-    font-family: 'Roboto', sans-serif;
-  }
-  .content {
-    padding-left: 100px;
-    padding-right: 100px;
-  }
+  
 </style>
 <body>
 
   <div class="content">
-      <h1>Chart vue</h1>
+      <h1>Chart view</h1>
       <p>Tweets en liaison avec les trotinnettes les plus re-tweeter et liker dans le monde.</p>
 
       <p id="most_retweet"></p>
+
+      <div style="margin-top: 50px"></div>
+
+      <h2>Chart One</h2>
       <canvas id="myChart"></canvas>
+
+      <div style="margin-top: 50px"></div>
+
+      <h2>Chart Two</h2>
+      <canvas id="myChart2"></canvas>
   </div>
   
 </body>
@@ -33,93 +36,5 @@
   src="https://code.jquery.com/jquery-3.4.0.slim.js"
   integrity="sha256-milezx5lakrZu0OP9b2QWFy1ft/UEUK6NH1Jqz8hUhQ="
   crossorigin="anonymous"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-
-<script>
-
-</script>
-
-
-<script> 
-var data = JSON.stringify({
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "range": {
-            "retweet_count": {
-              "gt": 0
-            }
-          }
-        }
-      ],
-      "should": [
-        {
-          "range": {
-            "favorite_count": {
-              "gt": 0
-            }
-          }
-        }
-      ]
-    }
-  },
-  "sort": [
-    {
-      "retweet_count": {
-        "order": "desc"
-      }
-    }
-  ]
-});
-
-var xhr = new XMLHttpRequest();
-xhr.withCredentials = true;
-
-xhr.addEventListener("readystatechange", function () {
-  if (this.readyState === this.DONE) {
-    var res = this.responseText;
-    var obj = JSON.parse(res);
-    console.log(obj.hits.hits);
-    console.log(obj.hits.total.value);
-
-    $('#most_retweet').text('Nombre total de tweets trouvés : ' + obj.hits.total.value);
-
-    var tab = [];
-    var hits = obj.hits.hits;
-
-    $(hits).each(function( index, val ) {
-      $(val).each(function(k, v) {
-        console.log(v._source.favorite_count)
-        tab.push(v._source.favorite_count);
-      });
-    });
-
-    // Chart
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var chart = new Chart(ctx, {
-        type: 'bar',
-
-        data: {
-            labels: ['Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet'],
-            datasets: [{
-                label: 'Tweets les plus re-tweeter et liker concernant les trottinettes électriques',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                data: tab
-            }]
-        },
-
-        options: {}
-    });
-  }
-});
-
-xhr.open("POST", "http://localhost:9200/twitter/_search");
-xhr.setRequestHeader("cookie", "PHPSESSID=6ftkbi526eh2goofkon2u6gpj9");
-xhr.setRequestHeader("content-type", "application/json");
-
-xhr.send(data);
-
-</script>
+<script src="javascripts/chart.js"></script>
