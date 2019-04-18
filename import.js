@@ -64,9 +64,17 @@ Fs.readdir(scootDir, (err, files) => {
         let bulkData = "";
         let fileData = require(`${scootDir}/${file}`);
 
-        fileData.forEach(tweet => {
+        fileData.forEach(data => {
             bulkData = bulkData + `{"create": {"_index": "${elasticSearchIndexNames[nameIndex]}", "_id": "${id++}", "_type": "${elasticSearchIndexNames[nameIndex]}" }}\n`;
-            bulkData = bulkData + JSON.stringify(tweet) + '\n';
+            if(data.lng != null || data.lat != null){
+                data.location = {
+                    lon: data.lng,
+                    lat: data.lat
+                }
+                delete data.lng;
+                delete data.lon;
+            }
+            bulkData = bulkData + JSON.stringify(data) + '\n';
         });
         console.log(elasticSearchIndexNames[nameIndex]);
         request.post('http://localhost:9200/_bulk', {
