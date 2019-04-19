@@ -20,7 +20,6 @@ Fs.readdir(pathToFolder, (err, files) => {
                 return false;
             }
 
-
             bulkData = bulkData + `{"create": {"_index": "${elasticSearchIndexName}", "_id": "${index++}", "_type": "tweet" }}\n`;
             let date = new Date(tweet.created_at);
             let y = date.getFullYear();
@@ -44,7 +43,7 @@ Fs.readdir(pathToFolder, (err, files) => {
             if (sec < 10) {
                 sec = '0' + sec;
             }
-            tweet.created_at = y + '-' + month + '-' + d + ' ' + hour + ':' + min + ':' + sec;
+            tweet.created_at = y + '-' + month + '-' + d + 'T' + hour + ':' + min + ':' + sec;
             bulkData = bulkData + JSON.stringify(tweet) + '\n';
 
             idCache[tweet.id] = true;
