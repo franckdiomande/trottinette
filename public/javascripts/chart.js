@@ -1,4 +1,5 @@
 var data = JSON.stringify({
+    "size": 20,
     "query": {
       "bool": {
         "must": [
@@ -45,12 +46,14 @@ var data = JSON.stringify({
       var tab = [];
       var tab2 = [];
       var hits = obj.hits.hits;
+      var datesTweets = []
   
       $(hits).each(function( index, val ) {
         $(val).each(function(k, v) {
           console.log(v._source.favorite_count)
           tab.push(v._source.favorite_count);
           tab2.push(v._source.retweet_count);
+          datesTweets.push(v._source.created_at);
         });
       });
   
@@ -60,7 +63,7 @@ var data = JSON.stringify({
           type: 'bar',
   
           data: {
-              labels: ['Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet'],
+              labels: datesTweets,
               datasets: [{
                   label: 'Nombre de likes concernant les Tweets de trottinettes électriques',
                   backgroundColor: 'rgb(255, 99, 132)',
@@ -71,12 +74,13 @@ var data = JSON.stringify({
       });
   
       // Chart number two
+      /*
       var ctx = document.getElementById('myChart2').getContext('2d');
       var chart = new Chart(ctx, {
           type: 'bar',
   
           data: {
-              labels: ['Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet', 'Tweet'],
+              labels: datesTweets, tab2,
               datasets: [{
                   label: 'Nombre de retweets concernant les Tweets de trottinettes électriques',
                   backgroundColor: '#324eb7',
@@ -85,6 +89,7 @@ var data = JSON.stringify({
               }]
           },
       });
+      */
   
   
   
