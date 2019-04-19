@@ -1,34 +1,12 @@
 var data = JSON.stringify({
     "size": 20,
     "query": {
-      "bool": {
-        "must": [
-          {
-            "range": {
-              "retweet_count": {
-                "gt": 0
-              }
-            }
+        "range": {
+          "retweet_count": {
+            "gt": 0
           }
-        ],
-        "should": [
-          {
-            "range": {
-              "favorite_count": {
-                "gt": 0
-              }
-            }
-          }
-        ]
-      }
-    },
-    "sort": [
-      {
-        "retweet_count": {
-          "order": "desc"
         }
       }
-    ]
   });
   
   var xhr = new XMLHttpRequest();
@@ -39,7 +17,7 @@ var data = JSON.stringify({
       var res = this.responseText;
       var obj = JSON.parse(res);
       console.log(obj.hits.hits);
-      console.log(obj.hits.total.value);
+      //console.log(obj.hits.total.value);
   
       $('#most_retweet').text('Nombre total de tweets trouvés : ' + obj.hits.total.value);
   
@@ -74,7 +52,7 @@ var data = JSON.stringify({
       });
   
       // Chart number two
-      /*
+      
       var ctx = document.getElementById('myChart2').getContext('2d');
       var chart = new Chart(ctx, {
           type: 'bar',
@@ -88,11 +66,7 @@ var data = JSON.stringify({
                   data: tab2
               }]
           },
-      });
-      */
-  
-  
-  
+      });  
     }
   });
   
