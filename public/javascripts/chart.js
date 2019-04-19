@@ -1,12 +1,31 @@
 var data = JSON.stringify({
-    "size": 20,
+    "size": 20, 
     "query": {
-        "range": {
-          "retweet_count": {
-            "gt": 0
+      "bool": {
+        "must": [
+          {
+            "range": {
+              "retweet_count": {
+                "gt": 0
+              }
+            }
           }
-        }
+        ],
+        "should": [
+          {
+            "range": {
+              "favorite_count": {
+                "gt": 0
+              }
+            }
+          }
+        ]
       }
+        
+    },
+    "sort": [
+      { "created_at": {"order" : "desc"}}
+    ]
   });
   
   var xhr = new XMLHttpRequest();
@@ -36,6 +55,7 @@ var data = JSON.stringify({
       });
   
       // Chart number one
+      /*
       var ctx = document.getElementById('myChart').getContext('2d');
       var chart = new Chart(ctx, {
           type: 'bar',
@@ -50,6 +70,88 @@ var data = JSON.stringify({
               }]
           },
       });
+      */
+
+     var canvas = document.getElementById("myChart");
+     var ctx = canvas.getContext('2d');
+     
+     // Global Options:
+     Chart.defaults.global.defaultFontColor = 'black';
+     Chart.defaults.global.defaultFontSize = 16;
+     
+     var data = {
+       labels: datesTweets,
+       datasets: [{
+           label: "Nombre de likes",
+           fill: false,
+           lineTension: 0.1,
+           backgroundColor: "rgb(255, 99, 132)",
+           borderColor: "rgb(255, 99, 132)", // The main line color
+           borderCapStyle: 'square',
+           borderDash: [], // try [5, 15] for instance
+           borderDashOffset: 0.0,
+           borderJoinStyle: 'miter',
+           pointBorderColor: "black",
+           pointBackgroundColor: "white",
+           pointBorderWidth: 1,
+           pointHoverRadius: 8,
+           pointHoverBackgroundColor: "yellow",
+           pointHoverBorderColor: "brown",
+           pointHoverBorderWidth: 2,
+           pointRadius: 4,
+           pointHitRadius: 10,
+           // notice the gap in the data and the spanGaps: true
+           data: tab,
+           spanGaps: true,
+         }, {
+           label: "Nombre de retweets",
+           fill: false,
+           lineTension: 0.1,
+           backgroundColor: "#324eb7",
+           borderColor: "#324eb7",
+           borderCapStyle: 'butt',
+           borderDash: [],
+           borderDashOffset: 0.0,
+           borderJoinStyle: 'miter',
+           pointBorderColor: "black",
+           pointBackgroundColor: "white",
+           pointBorderWidth: 1,
+           pointHoverRadius: 8,
+           pointHoverBackgroundColor: "brown",
+           pointHoverBorderColor: "yellow",
+           pointHoverBorderWidth: 2,
+           pointRadius: 4,
+           pointHitRadius: 10,
+           // notice the gap in the data and the spanGaps: false
+           data: tab2,
+           spanGaps: false,
+         }
+     
+       ]
+     };
+     
+     // Notice the scaleLabel at the same level as Ticks
+     var options = {
+       scales: {
+                 yAxes: [{
+                     ticks: {
+                         beginAtZero:true
+                     },
+                     scaleLabel: {
+                          display: true,
+                          labelString: 'Moola',
+                          fontSize: 20 
+                       }
+                 }]            
+             }  
+     };
+     
+     // Chart declaration:
+     var myBarChart = new Chart(ctx, {
+       type: 'line',
+       data: data,
+       options: options
+     });
   
       // Chart number two
       
