@@ -139,7 +139,7 @@ var data = JSON.stringify({
                      },
                      scaleLabel: {
                           display: true,
-                          labelString: 'Moola',
+                          labelString: 'Graphiques Nombre Likes & Retweets',
                           fontSize: 20 
                        }
                  }]            
