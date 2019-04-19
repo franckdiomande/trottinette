@@ -6,6 +6,8 @@ const request = require('request');
 let pathToFolder = "./scripts/TwitterScripts/data_to_import";
 let elasticSearchIndexName = "twitter";
 
+let idCache = {};
+
 let index = 0;
 Fs.readdir(pathToFolder, (err, files) => {
     files.forEach(file => {
@@ -13,6 +15,12 @@ Fs.readdir(pathToFolder, (err, files) => {
         let fileData = require(`${pathToFolder}/${file}`);
 
         fileData.forEach(tweet => {
+
+            if(idCache[tweet.id]){
+                return false;
+            }
+
+
             bulkData = bulkData + `{"create": {"_index": "${elasticSearchIndexName}", "_id": "${index++}", "_type": "tweet" }}\n`;
             let date = new Date(tweet.created_at);
             let y = date.getFullYear();
@@ -38,6 +46,8 @@ Fs.readdir(pathToFolder, (err, files) => {
             }
             tweet.created_at = y + '-' + month + '-' + d + ' ' + hour + ':' + min + ':' + sec;
             bulkData = bulkData + JSON.stringify(tweet) + '\n';
+
+            idCache[tweet.id] = true;
         });
 
         request.post('http://localhost:9200/_bulk', {
@@ -64,17 +74,15 @@ Fs.readdir(scootDir, (err, files) => {
         let bulkData = "";
         let fileData = require(`${scootDir}/${file}`);
 
-        fileData.forEach(data => {
-            bulkData = bulkData + `{"create": {"_index": "${elasticSearchIndexNames[nameIndex]}", "_id": "${id++}", "_type": "${elasticSearchIndexNames[nameIndex]}" }}\n`;
-            if(data.lng != null || data.lat != null){
-                data.location = {
-                    lon: data.lng,
-                    lat: data.lat
-                }
-                delete data.lng;
-                delete data.lon;
+        fileData.forEach(scoot => {
+
+            if(elasticSearchIndexNames[nameIndex] === 'scoot_location'){
+                scoot['provider_name'] = scoot.provider.name;
+                console.log(scoot['provider_name']);
             }
-            bulkData = bulkData + JSON.stringify(data) + '\n';
+
+            bulkData = bulkData + `{"create": {"_index": "${elasticSearchIndexNames[nameIndex]}", "_id": "${id++}", "_type": "${elasticSearchIndexNames[nameIndex]}" }}\n`;
+            bulkData = bulkData + JSON.stringify(scoot) + '\n';
         });
         console.log(elasticSearchIndexNames[nameIndex]);
         request.post('http://localhost:9200/_bulk', {
